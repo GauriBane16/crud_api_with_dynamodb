@@ -3,7 +3,7 @@ import {GetItemCommand,PutItemCommand,UpdateItemCommand,DeleteItemCommand,ScanCo
 import {marshall, unmarshall} from "@aws-sdk/util-dynamodb";
 
 const getPatient=async (event:any)=>{
-    const response={statusCode:200,body:null};
+    const response={statusCode:200,body:{}};
     try {
         const params={
             TableName:process.env.DYNAMODB_TABLE_NAME,
@@ -19,7 +19,7 @@ const getPatient=async (event:any)=>{
         })
 
         
-    } catch (error) {
+    } catch (error:any) {
         console.log("Error",error);
         response.statusCode=500;
         response.body=JSON.stringify({
