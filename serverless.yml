@@ -29,12 +29,11 @@ provider:
             - "dynamodb:GetItem"  
           Resource: !GetAtt PatientsTable.Arn  
 
-      addPatient: 
-        handler: api.addPatient
-        name: add-patient 
-        memorysize: 128 #mb
-        timeout: 5 #seconds
-
+    addPatient: 
+      handler: api.addPatient
+      name: add-patient 
+      memorysize: 128 #mb
+      timeout: 5 #seconds
       events:
         - http:
             path: patient
@@ -45,12 +44,11 @@ provider:
             - "dynamodb:PutItem"  
           Resource: !GetAtt PatientsTable.Arn
 
-      updatePatient: 
-        handler: api.updatePatient
-        name: update-patient 
-        memorysize: 128 #mb
-        timeout: 5 #seconds
-
+    updatePatient: 
+      handler: api.updatePatient
+      name: update-patient 
+      memorysize: 128 #mb
+      timeout: 5 #seconds
       events:
         - http:
             path: patient/{patientId}
@@ -61,12 +59,11 @@ provider:
             - "dynamodb:UpdatetItem"  
           Resource: !GetAtt PatientsTable.Arn 
 
-      deletePatient: 
-        handler: api.deletePatient
-        name: delete-patient 
-        memorysize: 128 #mb
-        timeout: 5 #seconds
-
+    deletePatient: 
+      handler: api.deletePatient
+      name: delete-patient 
+      memorysize: 128 #mb
+      timeout: 5 #seconds
       events:
         - http:
             path: patient/{patientId}
@@ -77,12 +74,11 @@ provider:
             - "dynamodb:DeletetItem"  
           Resource: !GetAtt PatientsTable.Arn
 
-      getAllPatients: 
-        handler: api.getAllPatients
-        name: get-all-patients 
-        memorysize: 128 #mb
-        timeout: 5 #seconds
-        
+    getAllPatients: 
+      handler: api.getAllPatients
+      name: get-all-patients 
+      memorysize: 128 #mb
+      timeout: 5 #seconds
       events:
         - http:
             path: patient
