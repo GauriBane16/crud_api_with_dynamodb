@@ -99,7 +99,7 @@ const updatePatient=async (event:any)=>{
     return response;
 }
 
-const deletePatient = async (event) => {
+const deletePatient = async (event:any) => {
     const response = { statusCode: 200,body:null };
 
     try {
