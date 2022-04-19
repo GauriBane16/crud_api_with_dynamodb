@@ -14,10 +14,10 @@ const getPatient=async (event:any)=>{
         console.log("Item : ",{ Item })
         response.body=JSON.stringify({
             message:"Successfully retrieved patient",
-            data:(Item)?unmarshall(Item):{},
-            rawData:Item
+            data:(Item)?unmarshall(Item):{}
+            
         })
-
+        // rawData:Item
         
     } catch (error:any) {
         console.log("Error",error);
@@ -135,8 +135,9 @@ const getAllPatients = async () => {
         response.body = JSON.stringify({
             message: "Successfully retrieved all patients.",
             data: Items?Items.map((item) => unmarshall(item)):[],
-            Items,
+            
         });
+        // Items,
     } catch (error:any) {
         console.error(error);
         response.statusCode = 500;
