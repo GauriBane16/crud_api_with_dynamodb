@@ -1,105 +1,103 @@
-service: dynamodb_crud_api
+service: dynamodb-crud-api
 
 provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
   region: us-west-1
-  environment: 
-    DYNAMODB_TABLE_NAME:${self:custom.patientsTableName}
-  
-  custom:   
-    patientsTableName: patients-table-${self:provider.stage}
-  plugins:
-    - serverless-iam-roles-per-function
+  environment:
+    DYNAMODB_TABLE_NAME: ${self:custom.patientsTableName}
 
-  functions:
-    getPatient:
-      handler: api.getPatient  
-      name: get-patient
-      memorysize: 128 #mb
-      timeout: 5 #seconds
-      events:
-        - http:
-            path: patient/{patientId}
-            method: GET
-      IamRoleStatements:
-        - Effect: "Allow"
-          Action:
-            - "dynamodb:GetItem"  
-          Resource: !GetAtt PatientsTable.Arn  
+custom:
+  patientsTableName: patients-table-${self:provider.stage}
 
-    addPatient: 
-      handler: api.addPatient
-      name: add-patient 
-      memorysize: 128 #mb
-      timeout: 5 #seconds
-      events:
-        - http:
-            path: patient
-            method: POST
-      IamRoleStatements:
-        - Effect: "Allow"
-          Action:
-            - "dynamodb:PutItem"  
-          Resource: !GetAtt PatientsTable.Arn
+plugins:
+  - serverless-iam-roles-per-function
 
-    updatePatient: 
-      handler: api.updatePatient
-      name: update-patient 
-      memorysize: 128 #mb
-      timeout: 5 #seconds
-      events:
-        - http:
-            path: patient/{patientId}
-            method: PUT
-      IamRoleStatements:
-        - Effect: "Allow"
-          Action:
-            - "dynamodb:UpdatetItem"  
-          Resource: !GetAtt PatientsTable.Arn 
+functions:
+  getPatient:
+    handler: api.getPatient
+    name: get-patient
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: patientt/{patientId}
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:GetItem"
+        Resource: !GetAtt PatientsTable.Arn
+  addPatient:
+    handler: api.addPatient
+    name: add-patient
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: patient
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:PutItem"
+        Resource: !GetAtt PatientsTable.Arn
+  updatePatient:
+    handler: api.updatePatient
+    name: update-patient
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: patient/{patientId}
+          method: PUT
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:UpdateItem"
+        Resource: !GetAtt PatientsTable.Arn
+  deletePatient:
+    handler: api.deletePatient
+    name: delete-patient
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: patient/{patientId}
+          method: DELETE
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:DeleteItem"
+        Resource: !GetAtt PatientsTable.Arn
+  getAllPatients:
+    handler: api.getAllPatients
+    name: get-all-patients
+    memorySize: 128 # mb
+    timeout: 5 # seconds
+    events:
+      - http:
+          path: patients
+          method: GET
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "dynamodb:Scan"
+        Resource: !GetAtt PatientsTable.Arn
 
-    deletePatient: 
-      handler: api.deletePatient
-      name: delete-patient 
-      memorysize: 128 #mb
-      timeout: 5 #seconds
-      events:
-        - http:
-            path: patient/{patientId}
-            method: DELETE
-      IamRoleStatements:
-        - Effect: "Allow"
-          Action:
-            - "dynamodb:DeletetItem"  
-          Resource: !GetAtt PatientsTable.Arn
-
-    getAllPatients: 
-      handler: api.getAllPatients
-      name: get-all-patients 
-      memorysize: 128 #mb
-      timeout: 5 #seconds
-      events:
-        - http:
-            path: patient
-            method: GET
-      IamRoleStatements:
-        - Effect: "Allow"
-          Action:
-            - "dynamodb:Scan"  
-          Resource: !GetAtt PatientsTable.Arn                  
-  
-  resources:
-    Resources:
-      patientsTable: 
+resources:
+  Resources:
+    PatientsTable:
       Type: AWS::DynamoDB::Table
-      TableName: ${self:custom.patientsTableName}
-      AttributeDefinitions:
-        - AttributeName: patientId
-          AttributType: S
-      KeySchema:     
-        - AttributeName: patientId
-          KeyType: HASH
-      ProvisionedThroughPut:
-        ReadCapacityUnits: 1
-        WriteCapascityUnits: 1    
+      Properties:
+        TableName: ${self:custom.patientsTableName}
+        AttributeDefinitions:
+          - AttributeName: patientId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: patientId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
