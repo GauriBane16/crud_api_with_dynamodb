@@ -22,7 +22,7 @@ functions:
     timeout: 5 # seconds
     events:
       - http:
-          path: patientt/{patientId}
+          path: patient/{patientId}
           method: GET
     iamRoleStatements:
       - Effect: "Allow"
