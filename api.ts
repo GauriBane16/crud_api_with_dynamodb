@@ -32,7 +32,7 @@ const getPatient=async (event:any)=>{
 }
 
 const addPatient=async (event:any)=>{
-    const response={statusCode:200,body:null};
+    const response={statusCode:200,body:{}};
     try {
         const body=JSON.parse(event.body);
         const params={
@@ -48,7 +48,7 @@ const addPatient=async (event:any)=>{
         })
 
         
-    } catch (error) {
+    } catch (error:any) {
         console.log("Error",error);
         response.statusCode=500;
         response.body=JSON.stringify({
@@ -61,7 +61,7 @@ const addPatient=async (event:any)=>{
 }
 
 const updatePatient=async (event:any)=>{
-    const response={statusCode:200,body:null};
+    const response={statusCode:200,body:{}};
     try {
         const body=JSON.parse(event.body);
         const objKeys=Object.keys(body);
@@ -87,7 +87,7 @@ const updatePatient=async (event:any)=>{
         })
 
         
-    } catch (error) {
+    } catch (error:any) {
         console.log("Error",error);
         response.statusCode=500;
         response.body=JSON.stringify({
@@ -100,7 +100,7 @@ const updatePatient=async (event:any)=>{
 }
 
 const deletePatient = async (event:any) => {
-    const response = { statusCode: 200,body:null };
+    const response = { statusCode: 200,body:{} };
 
     try {
         const params = {
@@ -113,13 +113,13 @@ const deletePatient = async (event:any) => {
             message: "Successfully deleted patient.",
             deleteResult,
         });
-    } catch (e) {
-        console.error(e);
+    } catch (error:any) {
+        console.error(error);
         response.statusCode = 500;
         response.body = JSON.stringify({
             message: "Failed to delete patient.",
-            errorMsg: e.message,
-            errorStack: e.stack,
+            errorMsg: error.message,
+            errorStack: error.stack,
         });
     }
 
@@ -127,23 +127,23 @@ const deletePatient = async (event:any) => {
 };
 
 const getAllPatients = async () => {
-    const response = { statusCode: 200,body:null };
+    const response = { statusCode: 200,body:{} };
 
     try {
         const { Items } = await db.send(new ScanCommand({ TableName: process.env.DYNAMODB_TABLE_NAME }));
 
         response.body = JSON.stringify({
             message: "Successfully retrieved all patients.",
-            data: Items.map((item) => unmarshall(item)),
+            data: Items?Items.map((item) => unmarshall(item)):[],
             Items,
         });
-    } catch (e) {
-        console.error(e);
+    } catch (error:any) {
+        console.error(error);
         response.statusCode = 500;
         response.body = JSON.stringify({
             message: "Failed to retrieve patients.",
-            errorMsg: e.message,
-            errorStack: e.stack,
+            errorMsg: error.message,
+            errorStack: error.stack,
         });
     }
 
