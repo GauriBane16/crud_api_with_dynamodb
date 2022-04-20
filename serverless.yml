@@ -14,6 +14,20 @@ custom:
 plugins:
   - serverless-iam-roles-per-function
 
+  http:
+    authorizers:
+      serviceAuthorizer:
+        identitySource: $request.header.Authorization
+        issuerUrl:
+          Fn::Join:
+            - ""
+            - - "https://cognito-idp."
+              - "us-east-1"
+              - ".amazonaws.com/"
+              - Ref: PatientApiUserPool
+        audience:
+          - Ref: PatientApiUserPoolClient
+
 functions:
   getPatient:
     handler: api.getPatient
@@ -88,6 +102,45 @@ functions:
 
 resources:
   Resources:
+    Http:
+      DependsOn: PatientApiUserPool
+    PatientApiUserPool:
+      Type: AWS::Cognito::UserPool
+      Properties:
+        UserPoolName: patient-api-user-pool
+        UsernameAttributes:
+          - email
+        AutoVerifiedAttributes:
+          - email
+    PatientApiUserPoolClient:
+      Type: AWS::Cognito::UserPoolClient
+      Properties:
+        ClientName: patient-api-user-pool
+        AllowedOAuthFlows:
+          - implicit
+        AllowedOAuthFlowsUserPoolClient: true
+        AllowedOAuthScopes:
+          - phone
+          - email
+          - openid
+          - profile
+          - aws.cognito.signin.user.admin
+        UserPoolId:
+          Ref: PatientApiUserPool
+        CallbackURLs:
+          - https://localhost:3000
+        ExplicitAuthFlows:
+          - ALLOW_USER_SRP_AUTH
+          - ALLOW_REFRESH_TOKEN_AUTH
+        GenerateSecret: false
+        SupportedIdentityProviders:
+          - COGNITO
+    serviceUserPoolDomain:
+      Type: AWS::Cognito::UserPoolDomain
+      Properties:
+        UserPoolId:
+          Ref: PatientApiUserPool
+        Domain: patient-api-user-pool
     PatientsTable:
       Type: AWS::DynamoDB::Table
       Properties:

@@ -36,9 +36,6 @@ jobs:
     - name: Build
       run: npm run compile
 
-    - name: Zip
-        run: cd dist 
-
     - name: serverless deploy
       uses: serverless/github-action@master
       with:
