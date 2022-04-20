@@ -36,9 +36,6 @@ jobs:
     - name: Build
       run: npm run compile
 
-    - name: Move node_modules to dist
-        run: mv node_modules /dist/node_modules
-
     - name: Zip
         run: cd dist 
 
